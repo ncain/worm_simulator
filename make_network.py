@@ -1,3 +1,4 @@
+#!/usr/bin/python3
 """Generate a CSV file representing a graph."""
 from optparse import OptionParser
 from math import floor
