@@ -21,9 +21,11 @@ def simulate(net: Graph, patient_zero: str,
                 if random() <= infection_probability:
                     infected.append(node)
         round_count += 1
-        print('Round: ' + str(round_count) + ', '
-              + str(len(infected) - currently_infected)
-              + ' newly infected, ' + str(len(infected)) + ' total infected.')
+        infection_delta = len(infected) - currently_infected
+        if infection_delta > 0:
+            print('Round: ' + str(round_count) +
+                  ', infection delta: ' + str(infection_delta) +
+                  ', total infected: ' + str(len(infected)))
     return round_count
 
 
@@ -41,10 +43,12 @@ def simulate_inoculation(net: Graph, patient_zero: str,
     while len(infected) > 0:
         currently_infected = len(infected)
         currently_inoculated = len(inoculated)
+        new_infections = 0
         for node in net.neighbors(choice(infected)):
             if node not in infected and node not in inoculated:
                 if random() <= infection_probability:
                     infected.append(node)
+                    new_infections += 1
         for node in net.neighbors(choice(inoculated)):
             if node not in inoculated:
                 if random() <= inoculation_probability:
@@ -54,10 +58,13 @@ def simulate_inoculation(net: Graph, patient_zero: str,
         round_count += 1
         infection_delta = str(len(infected) - currently_infected)
         inoculation_delta = str(len(inoculated) - currently_inoculated)
-        print('Round: ' + str(round_count) + ', infection delta: ' +
-              infection_delta + ', inoculation delta: ' + inoculation_delta +
-              ', total infected: ' + str(len(infected)) +
-              ', total inoculated: ' + str(len(inoculated)))
+        if not (infection_delta == '0' and inoculation_delta == '0'):
+            print('Round: ' + str(round_count) +
+                  ', infection delta: ' + infection_delta +
+                  ' (' + str(new_infections) + ' new infections)' +
+                  ', inoculation delta: ' + inoculation_delta +
+                  ', total infected: ' + str(len(infected)) +
+                  ', total inoculated: ' + str(len(inoculated)))
     return round_count
 
 
@@ -73,11 +80,16 @@ def main():
                       type="float", dest="infection_probability", default=0.5,
                       help="The probability that an infection will spread")
     parser.add_option("-f", "--first-infected", metavar="NODE", type="string",
-                      dest="patient_zero", default='0',
-                      help="The index of the initially infected node.")
+                      dest="patient_zero", default='-1',
+                      help="The index of the initially infected node. " +
+                           "Default (-1): choose a node at random.")
     parser.add_option("-i", "--inoculator", metavar="NODE", type="string",
                       dest="inoculator", default=None,
-                      help="The index of the first inoculator node.")
+                      help="The index of the first inoculator node. " +
+                           "Default is None " +
+                           "(no argument supplied means no inoculation), " +
+                           "and an inoculator can be " +
+                           "chosen at random by specifying -1.")
     parser.add_option("-q", "--inoculation-probability", metavar="PROBABILTIY",
                       type="float", dest="inoculation_probability",
                       default=0.5,
@@ -90,11 +102,18 @@ def main():
             (options.infection_probability > 1),
             (options.infection_probability < 0))):
         parser.error("Probabilities must be between 0 and 1.")
+    if (options.patient_zero == options.inoculator and
+       options.inoculator != '-1'):
+        parser.error("Cannot spread both inoculation and infection " +
+                     "from the same node.")
     try:
         with open(options.csv_file, 'r') as infile:
             csv = reader(infile)
             for row in csv:
                 graph.add_edge(row[0], row[1])
+            node_list = list(graph.nodes())
+            if options.patient_zero == '-1':
+                options.patient_zero = choice(node_list)
             if options.patient_zero not in graph.nodes():
                 parser.error("Patient zero must be in the set of nodes."
                              + "\nPatient zero: " + str(options.patient_zero)
@@ -103,6 +122,9 @@ def main():
                 simulate(graph, options.patient_zero,
                          options.infection_probability)
             else:
+                if options.inoculator == '-1':
+                    node_list.remove(options.patient_zero)
+                    options.patient_zero = choice(node_list)
                 if options.inoculator in graph.nodes():
                     simulate_inoculation(graph, options.patient_zero,
                                          options.infection_probability,

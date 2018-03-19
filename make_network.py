@@ -30,7 +30,11 @@ def main():
     parser.add_option("-e", "--erdos", "--erdos-renyi", metavar="probability",
                       type="float", dest="erdos",
                       help="Generate an Erdös-Rényi output graph, with the " +
-                           "specified probability of edge creation.")
+                           "specified probability of edge creation. " +
+                           "A value of 0.015 produces fairly sparse but " +
+                           "typically connected graphs, while 0.5 chooses " +
+                           "from graphs uniformly among those of degree " +
+                           "equal to that specified by the -v parameter.")
 
     parser.add_option("-b", "--barabasi", "--barabasi-albert", metavar="edges",
                       type="int", dest="barabasi",
@@ -42,7 +46,7 @@ def main():
                       help="Generate a Watts-Strogatz graph, where pksum is " +
                            "p + k, with p being the probability of an edge " +
                            "being replaced, and k being the number of " +
-                           "neighbors per sub-ring.")
+                           "neighbors per sub-ring. I prefer 2.25 or so.")
     (options, args) = parser.parse_args()
     graph = None
     if not any((options.erdos, options.barabasi, options.watts)):
