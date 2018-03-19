@@ -20,7 +20,7 @@ def simulate(net: Graph, patient_zero: int,
             if node not in infected:
                 if random() <= infection_probability:
                     infected.append(node)
-        ++round_count
+        round_count += 1
         print('Round: ' + round_count + ', '
               + (len(infected) - currently_infected))
     return round_count
@@ -50,7 +50,7 @@ def simulate_inoculation(net: Graph, patient_zero: int,
                     inoculated.append(node)
                     if node in infected:
                         infected.remove(node)
-        ++round_count
+        round_count += 1
         infection_delta = len(infected) - currently_infected
         inoculation_delta = len(inoculated) - currently_inoculated
         print('Round: ' + round_count + ', infection delta: ' + infection_delta
