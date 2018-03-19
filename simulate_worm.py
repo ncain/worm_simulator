@@ -108,3 +108,7 @@ def main():
 
     except IOError:
         parser.error("Unable to open or read from " + options.csv_file)
+
+
+if __name__ == "__main__":
+    main()
