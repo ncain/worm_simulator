@@ -61,24 +61,23 @@ def simulate_inoculation(net: Graph, patient_zero: int,
 def main():
     """Build a network from a file, then see how long it takes to infect."""
     parser = OptionParser(description="""Load a random graph from a CSV file,
-                          infect a given node,
-                          and spread with a given probability.""")
+infect a given node, and spread with a given probability.""")
     parser.add_option("-n", "--network", metavar="FILE", type="string",
                       dest="csv_file", help="""Opens the csv-formatted network
-                      CSV-format file located at FILE.""")
+CSV-format file located at FILE.""")
     parser.add_option("-p", "--infection-probability", metavar="PROBABILITY",
                       type="float", dest="infection_probability", default=0.5,
                       help="The probability that an infection will spread")
     parser.add_option("-f", "--first-infected", metavar="NODE", type="int",
                       dest="patient_zero", default=0, help="""The index of the
-                      initially infected node.""")
+initially infected node.""")
     parser.add_option("-i", "--inoculator", metavar="NODE", type="int",
                       dest="inoculator", default=None, help="""The index of the
-                      first inoculator node.""")
+first inoculator node.""")
     parser.add_option("-q", "--inoculation-probability", metavar="PROBABILTIY",
                       type="float", dest="inoculation_probability",
                       default=0.5, help="""The probability that a node will be
-                      inoculated (and cured).""")
+inoculated (and cured).""")
     (options, args) = parser.parse_args()
     graph = Graph()
     infected = list()
