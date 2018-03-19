@@ -6,7 +6,7 @@ from networkx import connected_watts_strogatz_graph
 from networkx import barabasi_albert_graph
 from networkx import fast_gnp_random_graph
 from networkx import draw as draw_nx
-from matplotlib.pyplot import draw
+from matplotlib.pyplot import draw, show
 from csv import writer
 
 
@@ -97,6 +97,7 @@ def main():
             csvwriter = writer(outfile)
             draw_nx(graph)
             draw()
+            show()
             for edge in graph.edges:
                 csvwriter.writerow(edge)
     except IOError as e:
