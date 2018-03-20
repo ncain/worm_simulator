@@ -10,7 +10,7 @@ def simulate(net: Graph, patient_zero: str,
              infection_probability: float) -> int:
     """Simulate worm propagation through a given network from a given node.
        Returns the number of rounds to fully infect the network."""
-    infected = list(patient_zero)
+    infected = set(patient_zero)
     round_count = 0
     print('Infecting ' + str(len(net.nodes())) + ' nodes, starting from '
           + patient_zero + '.')
@@ -40,7 +40,7 @@ def simulate_inoculation(net: Graph, patient_zero: str,
     round_count = 0
     print('Infecting ' + str(len(net.nodes())) + ' nodes, starting from '
           + patient_zero + ', and inoculating from ' + inoculator + '.')
-    while len(inoculated) < len(net.nodes()):
+    while len(infected) > 0:
         currently_infected = len(infected)
         currently_inoculated = len(inoculated)
         new_infections = 0
