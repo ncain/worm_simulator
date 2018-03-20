@@ -67,6 +67,13 @@ def main():
                            "short-circuited neighbors. Number of neighbors "
                            "is specified with -n <value>, and probability "
                            "is specified with -p <value>.")
+
+    parser.add_option("-d", "--display", "--draw", action="store_true",
+                      dest="draw", default=False,
+                      help="Enable matplotlib drawing and display of "
+                           "the generated network. Not recommended for "
+                           "graphs with more than several hundred vertices.")
+
     (options, args) = parser.parse_args()
     graph = None
     if not any((options.erdos, options.barabasi, options.watts)):
@@ -112,9 +119,10 @@ def main():
         with open(options.filename, 'w', newline='') as outfile:
             # write to the file with outfile.write
             csvwriter = writer(outfile)
-            draw_nx(graph)
-            draw()
-            show()
+            if options.draw:
+                draw_nx(graph)
+                draw()
+                show()
             for edge in graph.edges:
                 csvwriter.writerow(edge)
     except IOError as e:
