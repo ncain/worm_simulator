@@ -16,10 +16,10 @@ def simulate(net: Graph, patient_zero: str,
           + patient_zero + '.')
     while len(infected) < len(net.nodes()):
         currently_infected = len(infected)
-        for node in net.neighbors(choice(infected)):
+        for node in net.neighbors(choice(tuple(infected))):
             if node not in infected:
                 if random() <= infection_probability:
-                    infected.append(node)
+                    infected.add(node)
         round_count += 1
         infection_delta = len(infected) - currently_infected
         if infection_delta > 0:
