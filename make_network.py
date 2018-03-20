@@ -20,7 +20,9 @@ def main():
 
     parser.add_option("-o", "--out", metavar="FILE", type="string",
                       dest="filename", default="graph.csv",
-                      help="Write the output graph in CSV format to FILE")
+                      help="Write the output graph in CSV format to FILE. "
+                           "Defaults to 'graph.csv' inside the current "
+                           "working directory.")
 
     parser.add_option("-v", "--vertices", type="int", dest="vertices",
                       default=1000, metavar="COUNT",
